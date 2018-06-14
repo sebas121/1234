@@ -1,0 +1,15 @@
+A new contact request has been submitted!
+
+Once you have taken action on this request, update the "Admin notes" field
+in the Django admin: {{ FULL_DOMAIN }}{{ admin_url }}
+
+Request details:
+
+Date: {{ date_created }}
+
+Name: {{ name }}
+Email: {{ email }}
+Phone: {{ phone }}
+View: {{ view }}
+Message:
+{{ message }}

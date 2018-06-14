@@ -1,0 +1,19 @@
+host_ip: "13.229.170.29"
+project_domain: "ddiy-solutions"
+project_name: "ddiy"
+
+github_repo: "git@github.com:bitlabstudio/ddiy-solutions.git"
+github_branch: "master"
+nginx_server_name: "ddiy-solutions.com"
+certbot_admin_email: "info@ddiy-solutions.com"
+
+superuser: ubuntu
+deploy_user: deploy
+deploy_group: deploy
+deploy_user_uid: 1900
+
+django_project_folder: "/home/{{ deploy_user }}/project/"
+django_local_settings_path: "/home/{{ deploy_user }}/project/backend/local_settings.py"
+django_assets_folder: "/home/{{ deploy_user }}/project_assets/"
+django_git_repo: "/home/{{ deploy_user }}/src/git_repo/"
+django_git_project_root: "{{ django_git_repo }}backend/"

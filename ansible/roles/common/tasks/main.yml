@@ -1,0 +1,54 @@
+---
+- name: common - install python
+  become: yes
+  raw: apt-get install python-minimal aptitude -y
+
+- name: common - update locale
+  become: yes
+  raw: locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8
+
+- name: common - Update apt
+  become: yes
+  apt:
+    update_cache: yes
+    state: latest
+    cache_valid_time: 1800
+
+- name: common - update distribution
+  become: yes
+  apt:
+    upgrade: dist
+
+- name: common - install admin tools
+  become: yes
+  apt:
+    pkg: "{{ item }}"
+    update_cache: yes
+    state: latest
+    cache_valid_time: 1800
+  with_items:
+    - awscli
+    - curl
+    - vim
+    - htop
+
+- name: common - install packages
+  become: yes
+  apt:
+    pkg: "{{ item }}"
+    update_cache: yes
+    state: latest
+    cache_valid_time: 1800
+  with_items:
+    - build-essential
+    - g++
+    - gettext
+    - git
+    - libjpeg-dev
+    - libpq-dev
+    - libsqlite3-dev
+    - libssl-dev
+    - make
+    - mercurial
+    - sqlite3
+    - yui-compressor

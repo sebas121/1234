@@ -1,0 +1,35 @@
+---
+- name: frontend - create folders
+  become: yes
+  become_user: "{{ superuser }}"
+  file:
+    path: /home/{{ superuser }}/opt
+    state: directory
+
+- name: frontend - download node setup script
+  become: yes
+  become_user: "{{ superuser }}"
+  get_url:
+    url: https://deb.nodesource.com/setup_9.x
+    dest: /home/ubuntu/opt/setup_9.x
+
+- name: frontend - execute node setup script
+  become: yes
+  command: bash /home/ubuntu/opt/setup_9.x
+
+- name: frontend - install node
+  become: yes
+  apt:
+    name: nodejs
+
+- name: frontend - install npm
+  become: yes
+  command: npm install pm2 -g
+
+- name: frontend - register pm2 as a service
+  become: yes
+  command: env PATH=$PATH:/usr/bin pm2 startup systemd -u ubuntu --hp /home/ubuntu
+
+- name: frontend - install yarn
+  become: yes
+  command: npm install -g yarn

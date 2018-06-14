@@ -1,0 +1,18 @@
+A new cleaning request has been submitted!
+
+Request details:
+
+Date: {{ date_requested }}
+
+Name: {{ name }}
+Email: {{ email }}
+Address: {{ address }}
+Number of Rooms: {{ rooms }}
+Number of Bathrooms: {{ bathrooms }}
+Extras:
+{% for extra in extras %}
+{{ extra.name }} : {{ extra.hours }} Hours
+{% endfor %}
+
+Calculated hours: {{ calculated_hours }}
+calculated Quote: {{ calculated_quote }}

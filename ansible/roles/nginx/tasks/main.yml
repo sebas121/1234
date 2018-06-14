@@ -1,0 +1,52 @@
+---
+- name: nginx - install
+  become: yes
+  apt:
+    name: nginx
+
+- name: nginx - check if its running
+  become: yes
+  systemd:
+    enabled: yes
+    state: started
+    name: nginx
+
+- name: nginx - create folders
+  become: yes
+  file:
+    path: /etc/nginx/{{ item }}/
+    state: directory
+  with_items:
+    - sites-available
+    - sites-enabled
+    - old-conf
+
+- name: nginx - upload nginx conf
+  become: yes
+  template:
+    src: nginx.conf
+    dest: /etc/nginx/sites-available/backend
+
+- name: nginx - create symlink to sites-enabled
+  become: yes
+  file:
+    src: /etc/nginx/sites-available/backend
+    dest: /etc/nginx/sites-enabled/backend
+    state: link
+
+- name: nginx - check if default config exists
+  become: yes
+  stat:
+    path: /etc/nginx/sites-enabled/default
+  register: default_conf
+
+- name: nginx - move default config out and rename it
+  become: yes
+  command: mv /etc/nginx/sites-enabled/default /etc/nginx/old-conf/default
+  when: default_conf.stat.exists
+
+- name: nginx - restart nginx
+  become: yes
+  systemd:
+    state: restarted
+    name: nginx

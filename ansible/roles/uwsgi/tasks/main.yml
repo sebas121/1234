@@ -1,0 +1,26 @@
+---
+- name: uwsgi - install
+  become: yes
+  pip:
+    name: uwsgi
+
+- name: uwsgi - create folders
+  become: yes
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+  - /var/log/uwsgi
+  - /etc/uwsgi/
+
+- name: uwsgi - upload uwsgi.ini
+  become: yes
+  template:
+    src: uwsgi.ini
+    dest: /etc/uwsgi/uwsgi.ini
+
+- name: uwsgi - upload uwsgi.service
+  become: yes
+  template:
+    src: uwsgi.service
+    dest: /etc/systemd/system/uwsgi.service

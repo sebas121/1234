@@ -1,0 +1,11 @@
+DEBUG = True
+FULL_DOMAIN_DJANGO = 'http://localhost:8000'
+ALLOWED_HOSTS = ['localhost']
+STATIC_ROOT = '/Users/USERNAME/Projects/ddiy-solutions/project_assets/static/'
+MEDIA_ROOT = '/Users/USERNAME/Projects/ddiy-solutions/project_assets/media/'
+
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+ANYMAIL = {
+    # This is the sandbox API key, make sure to set the real one on the server
+    "MAILGUN_API_KEY": "key-673babe583668f6a1e0377d19cef92e5",
+}

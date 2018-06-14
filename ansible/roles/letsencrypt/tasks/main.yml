@@ -1,0 +1,68 @@
+---
+- name: letsencrypt - install software-properties-common
+  become: yes
+  apt:
+    name: software-properties-common
+    update_cache: yes
+    state: latest
+
+- name: letsencrypt - add certbot repo
+  become: yes
+  apt_repository:
+    repo: 'ppa:certbot/certbot'
+
+- name: letsencrypt - install certbot
+  become: yes
+  apt:
+    name: python-certbot-nginx
+    update_cache: yes
+    state: latest
+
+- name: letsencrypt - create certbot config.ini
+  become: yes
+  template:
+    src: cli.ini
+    dest: /etc/letsencrypt/cli.ini
+
+- name: letsencrypt - configure certbot
+  become: yes
+  shell: 'certbot --nginx --agree-tos --no-eff-email --expand --force-renewal --redirect -d {{ nginx_server_name }} -c /etc/letsencrypt/cli.ini'
+  args:
+    executable: /bin/bash
+
+- name: letsencrypt - configure certbot
+  become: yes
+  shell: 'certbot --nginx --agree-tos --no-eff-email --expand --force-renewal --redirect -d www.{{ nginx_server_name }} -c /etc/letsencrypt/cli.ini'
+  args:
+    executable: /bin/bash
+
+- name: letsencrypt - create service folder
+  become: yes
+  become_user: root
+  file:
+    path: /lib/systemd/system/certbot.d
+    state: directory
+
+
+- name: letsencrypt - create auto-renew service/timer
+  become: yes
+  become_user: root
+  template:
+    src: "{{ item }}"
+    dest: /lib/systemd/system/certbot.d/{{ item }}
+  with_items:
+    - certbot.service
+    - certbot.timer
+
+- name: letsencrypt - enable auto-renew timer
+  become: yes
+  shell: systemctl enable certbot.timer
+  args:
+    executable: /bin/bash
+
+- name: letsencrypt - check if its running
+  become: yes
+  systemd:
+    state: started
+    enabled: true
+    name: certbot.timer

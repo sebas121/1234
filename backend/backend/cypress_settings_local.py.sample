@@ -1,0 +1,8 @@
+# Use same gmail account as in your local_settings
+EMAIL_RECIPIENTS_OVERRIDE = ['YOURMAIL+cypress@gmail.com']
+FROM_EMAIL = 'YOURMAIL+cypress@gmail.com'
+ADMINS = (('DDIY Cypress Tests', 'YOURMAIL+cypress@gmail.com'),)
+MANAGERS = (('DDIY Cypress Tests', 'YOURMAIL+cypress@gmail.com'),)
+
+# Enable this if you want to receive emails
+EMAIL_BACKEND = 'influxdb_metrics.email.InfluxDbEmailBackend'

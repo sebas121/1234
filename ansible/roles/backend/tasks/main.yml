@@ -1,0 +1,51 @@
+- name: backend - create folders
+  become: yes
+  become_user: "{{ deploy_user }}"
+  file:
+    path: "/home/{{ deploy_user }}/{{ item }}"
+    state: directory
+  with_items:
+  - "backups/sqlite"
+  - "backups/locale"
+  - "project_assets/media"
+  - "project_assets/static"
+  - "project"
+  - "src"
+
+- name: backend - clone repo
+  become: yes
+  become_user: "{{ deploy_user }}"
+  git:
+    accept_hostkey: yes
+    repo: "{{ github_repo }}"
+    dest: "{{ django_git_repo }}"
+    version: "{{ github_branch }}"
+    clone: yes
+
+- name: backend - rsync repo
+  become: yes
+  become_user: "{{ deploy_user }}"
+  shell: rsync -avz --stats --delete {{ django_git_project_root }}/ {{ django_project_folder }}
+
+- name: backend - create pipenv
+  become: yes
+  become_user: "{{ deploy_user }}"
+  shell: pipenv install
+  args:
+    chdir: "{{ django_project_folder }}"
+    executable: /bin/bash
+
+- name: backend - copy local_settings
+  become: yes
+  become_user: "{{ deploy_user }}"
+  template:
+    src: local_settings.py
+    dest: "{{ django_local_settings_path }}"
+
+- name: backend - collectstatic
+  become: yes
+  become_user: "{{ deploy_user }}"
+  shell:  pipenv run ./manage.py collectstatic --noinput
+  args:
+    chdir: "{{ django_project_folder }}"
+    executable: /bin/bash

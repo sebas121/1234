@@ -1,0 +1,2 @@
+C:\Users\dylan\Desktop\Deploy\src\git_repo\obj\x86\Debug\ddiy.vbprojResolveAssemblyReference.cache
+C:\Users\dylan\Desktop\Deploy\src\git_repo\obj\x86\Debug\ddiy.vbproj.CoreCompileInputs.cache

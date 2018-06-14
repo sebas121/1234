@@ -1,0 +1,8 @@
+*.pyc
+.coverage
+.pytest_cache
+__pycache__
+local_settings.py
+cypress_settings_local.py
+cypress_test_db
+db.sqlite3

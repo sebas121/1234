@@ -1,0 +1,16 @@
+---
+- name: EC2 instances
+  hosts: ubuntu-server
+  user: "{{ superuser }}"
+  vars_files:
+    - vars/external_vars.yml
+
+  roles:
+    - { role: deploy-user, tags: [ 'deploy-user' ] }
+    - { role: common, tags: [ 'common' ] }
+    - { role: common-python, tags: [ 'common-python' ] }
+    - { role: backend, tags: [ 'backend' ] }
+    - { role: uwsgi, tags: [ 'uwsgi' ] }
+    - { role: nginx, tags: [ 'nginx' ] }
+    # - { role: letsencrypt, tags: [ 'letsencrypt' ] }
+    - { role: frontend, tags: [ 'frontend' ] }

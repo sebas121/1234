@@ -1,0 +1,46 @@
+---
+- name: deploy-user - create user
+  ignore_errors: yes
+  become: yes
+  user:
+    name: "{{ deploy_user }}"
+    state: present
+    groups: admin, www-data
+    shell: /bin/bash
+    uid: "{{ deploy_user_uid }}"
+
+- name: deploy-user - change home directory
+  file:
+    path: /home/{{ deploy_user }}/
+    state: directory
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_group }}"
+
+- name: deploy-user - create ssh directory
+  become: yes
+  file:
+    path: /home/{{ deploy_user }}/.ssh/
+    state: directory
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_group }}"
+
+- name: deploy-user - copy SSH key from folder
+  become: yes
+  copy:
+    remote_src: True
+    src: "/home/{{ superuser }}/.ssh/{{ item }}"
+    dest: "/home/{{ deploy_user }}/.ssh/{{ item }}"
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_group }}"
+    mode: 0400
+  with_items:
+    - "id_rsa.pub"
+    - "id_rsa"
+    - "authorized_keys"
+
+- name: deploy-user - extend PATH variable
+  become: yes
+  become_user: "{{ deploy_user }}"
+  lineinfile:
+    path: /home/{{ deploy_user }}/.profile
+    line: 'PATH="/usr/local/bin:$PATH"'

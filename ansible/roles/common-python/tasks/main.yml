@@ -1,0 +1,27 @@
+---
+- name: common-python - install core python packages
+  become: yes
+  apt:
+    pkg: "{{ item }}"
+    update_cache: yes
+    state: latest
+    cache_valid_time: 1800
+  with_items:
+    - python-dev
+    - python-setuptools
+
+- name: common-python - install pip
+  become: yes
+  easy_install:
+    name: pip
+
+
+- name: common-python - install global packages
+  become: yes
+  pip:
+    name: "{{ item }}"
+  with_items:
+    - pipenv
+    - ipython
+    - psycopg2
+    - python-memcached
